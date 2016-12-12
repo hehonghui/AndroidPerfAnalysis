@@ -22,7 +22,7 @@ public class CalculationsTest {
         List<Long> dataSet = new ArrayList<>();
         dataSet.add(0L);
         dataSet.add(TimeUnit.NANOSECONDS.convert(50, TimeUnit.MILLISECONDS));
-        List<Integer> droppedSet = Calculation.getDroppedSet(fpsConfig, dataSet);
+        List<Integer> droppedSet = FpsCalculator.getDroppedSet(fpsConfig, dataSet);
         assertThat(droppedSet.size()).isEqualTo(1);
         assertThat(droppedSet.get(0)).isEqualTo(2);
     }
@@ -30,9 +30,9 @@ public class CalculationsTest {
     @Test
     public void testBaseGetAmountOfFramesInSet() {
         FPSConfig fpsConfig = new FPSConfig();
-        assertThat(Calculation.getNumberOfFramesInSet(oneFrameNS, fpsConfig)).isEqualTo(1);
-        assertThat(Calculation.getNumberOfFramesInSet(oneFrameNS * 5, fpsConfig)).isEqualTo(5);
-        assertThat(Calculation.getNumberOfFramesInSet(oneFrameNS * 58, fpsConfig)).isEqualTo(58);
+        assertThat(FpsCalculator.getNumberOfFramesInSet(oneFrameNS, fpsConfig)).isEqualTo(1);
+        assertThat(FpsCalculator.getNumberOfFramesInSet(oneFrameNS * 5, fpsConfig)).isEqualTo(5);
+        assertThat(FpsCalculator.getNumberOfFramesInSet(oneFrameNS * 58, fpsConfig)).isEqualTo(58);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class CalculationsTest {
         FPSConfig fpsConfig = new FPSConfig();
         long start = 0;
         long end = oneFrameNS * 100;
-        assertThat(Calculation.getNumberOfFramesInSet(end, fpsConfig)).isEqualTo(100);
+        assertThat(FpsCalculator.getNumberOfFramesInSet(end, fpsConfig)).isEqualTo(100);
 
         List<Long> dataSet = new ArrayList<>();
         dataSet.add(start);
@@ -49,16 +49,16 @@ public class CalculationsTest {
         List<Integer> droppedSet = new ArrayList<>();
 
         droppedSet.add(4);
-        assertThat(Calculation.calculateMetric(fpsConfig, dataSet, droppedSet).getKey())
-                .isEqualTo(Calculation.Metric.GOOD);
+        assertThat(FpsCalculator.calculateMetric(fpsConfig, dataSet, droppedSet).getKey())
+                .isEqualTo(FpsCalculator.Metric.GOOD);
 
         droppedSet.add(6);
-        assertThat(Calculation.calculateMetric(fpsConfig, dataSet, droppedSet).getKey())
-                .isEqualTo(Calculation.Metric.MEDIUM);
+        assertThat(FpsCalculator.calculateMetric(fpsConfig, dataSet, droppedSet).getKey())
+                .isEqualTo(FpsCalculator.Metric.MEDIUM);
 
         droppedSet.add(10);
-        assertThat(Calculation.calculateMetric(fpsConfig, dataSet, droppedSet).getKey())
-                .isEqualTo(Calculation.Metric.BAD);
+        assertThat(FpsCalculator.calculateMetric(fpsConfig, dataSet, droppedSet).getKey())
+                .isEqualTo(FpsCalculator.Metric.BAD);
     }
 
 }

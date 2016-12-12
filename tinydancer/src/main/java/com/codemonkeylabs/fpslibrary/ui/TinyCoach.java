@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Application;
 import android.app.Service;
 import android.graphics.PixelFormat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,25 +13,26 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.codemonkeylabs.fpslibrary.Calculation;
+import com.codemonkeylabs.fpslibrary.FpsCalculator;
 import com.codemonkeylabs.fpslibrary.FPSConfig;
 import com.codemonkeylabs.fpslibrary.R;
 
 import java.util.AbstractMap;
+import java.util.LinkedList;
 import java.util.List;
 
-public class TinyCoach
-{
+public class TinyCoach {
     private FPSConfig fpsConfig;
     private View meterView;
     private final WindowManager windowManager;
     private int shortAnimationDuration = 200, longAnimationDuration = 700;
+    private final List<Long> mFpsValues = new LinkedList<>() ;
 
     // detect double tap so we can hide tinyDancer
-    private GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener(){
+    private GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector
+            .SimpleOnGestureListener() {
         @Override
-        public boolean onDoubleTap(MotionEvent e)
-        {
+        public boolean onDoubleTap(MotionEvent e) {
             // hide but don't remove view
             hide(false);
             return super.onDoubleTap(e);
@@ -54,12 +56,9 @@ public class TinyCoach
 
     private void addViewToWindow(View view) {
 
-        WindowManager.LayoutParams paramsF = new WindowManager.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+        WindowManager.LayoutParams paramsF = new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_PHONE, WindowManager
+                .LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
 
         // configure starting coordinates
         paramsF.gravity = fpsConfig.startingGravity;
@@ -84,18 +83,28 @@ public class TinyCoach
 
     public void showData(FPSConfig fpsConfig, List<Long> dataSet) {
 
-        List<Integer> droppedSet = Calculation.getDroppedSet(fpsConfig, dataSet);
-        AbstractMap.SimpleEntry<Calculation.Metric, Long> answer = Calculation.calculateMetric(fpsConfig, dataSet, droppedSet);
+        List<Integer> droppedSet = FpsCalculator.getDroppedSet(fpsConfig, dataSet);
+        AbstractMap.SimpleEntry<FpsCalculator.Metric, Long> answer = FpsCalculator.calculateMetric(fpsConfig, dataSet,
+                droppedSet);
 
-        if (answer.getKey() == Calculation.Metric.BAD) {
+        if (answer.getKey() == FpsCalculator.Metric.BAD) {
             meterView.setBackgroundResource(R.drawable.fpsmeterring_bad);
-        } else if (answer.getKey() == Calculation.Metric.MEDIUM) {
+        } else if (answer.getKey() == FpsCalculator.Metric.MEDIUM) {
             meterView.setBackgroundResource(R.drawable.fpsmeterring_medium);
         } else {
             meterView.setBackgroundResource(R.drawable.fpsmeterring_good);
         }
 
         ((TextView) meterView).setText(answer.getValue() + "");
+
+        // cache fps values
+        mFpsValues.add(answer.getValue()) ;
+
+        Log.e("", "####  tiny dancer fps : " + answer.getValue());
+    }
+
+    public List<Long> getFpsValues() {
+        return mFpsValues;
     }
 
     public void destroy() {
@@ -106,33 +115,30 @@ public class TinyCoach
     public void show() {
         meterView.setAlpha(0f);
         meterView.setVisibility(View.VISIBLE);
-        meterView.animate()
-                .alpha(1f)
-                .setDuration(longAnimationDuration)
-                .setListener(null);
+        meterView.animate().alpha(1f).setDuration(longAnimationDuration).setListener(null);
     }
 
-    public void hide (final boolean remove) {
-        meterView.animate()
-                .alpha(0f)
-                .setDuration(shortAnimationDuration)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {}
+    public void hide(final boolean remove) {
+        meterView.animate().alpha(0f).setDuration(shortAnimationDuration).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        meterView.setVisibility(View.GONE);
-                        if (remove) {
-                            windowManager.removeView(meterView);
-                        }
-                    }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                meterView.setVisibility(View.GONE);
+                if (remove) {
+                    windowManager.removeView(meterView);
+                }
+            }
 
-                    @Override
-                    public void onAnimationCancel(Animator animation) {}
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
 
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {}
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
         });
 
     }

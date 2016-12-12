@@ -23,14 +23,14 @@ allprojects {
 ext {
     // SDK versions
     minSdkVersion = 16
-    targetSdkVersion = 24
-    compileSdkVersion = 24
-    buildToolsVersion = "24.0.3"
+    targetSdkVersion = 23
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.1"
     sourceCompatibilityVersion = JavaVersion.VERSION_1_7
     targetCompatibilityVersion = JavaVersion.VERSION_1_7
 
     // Common versions
-    supportLibraryVersion = "24.2.1"
+    supportLibraryVersion = "23.0.1"
     butterKnifeVersion = "7.0.1"
     daggerVersion = "2.0.2"
 

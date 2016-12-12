@@ -17,7 +17,23 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
+
+task clearJar(type: Delete) {
+    delete 'build/libs/tinydancer.jar'
+}
+task makeJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'tinydancer.jar')
+}
+makeJar.dependsOn(clearJar, build)
+
 
 dependencies {
     testCompile deps.junit

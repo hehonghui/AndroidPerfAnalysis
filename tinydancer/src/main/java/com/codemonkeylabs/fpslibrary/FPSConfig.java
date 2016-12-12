@@ -8,8 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by brianplummer on 8/29/15.
  */
-public class FPSConfig implements Serializable
-{
+public class FPSConfig implements Serializable {
     public float redFlagPercentage = 0.2f; //
     public float yellowFlagPercentage = 0.05f; //
     public float refreshRate = 60; //60fps
@@ -21,22 +20,20 @@ public class FPSConfig implements Serializable
     public int startingGravity = Gravity.TOP | Gravity.START;
 
     // client facing callback that provides frame info
-    public FrameDataCallback frameDataCallback = null;
+    public DoFrameCallback frameDataCallback = null;
 
     // making final for now.....want to be solid on the math before we allow an
     // arbitrary value
     public final long sampleTimeInMs = 736;//928;//736; // default sample time
 
-    protected FPSConfig()
-    {}
+    protected FPSConfig() {
+    }
 
-    public long getSampleTimeInNs()
-    {
+    public long getSampleTimeInNs() {
         return TimeUnit.NANOSECONDS.convert(sampleTimeInMs, TimeUnit.MILLISECONDS);
     }
 
-    public long getDeviceRefreshRateInNs()
-    {
+    public long getDeviceRefreshRateInNs() {
         float value = deviceRefreshRateInMs * 1000000f;
         return (long) value;
     }

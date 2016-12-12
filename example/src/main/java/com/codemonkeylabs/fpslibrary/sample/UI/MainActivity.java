@@ -1,12 +1,14 @@
 package com.codemonkeylabs.fpslibrary.sample.UI;
 
-import android.app.Application;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codemonkeylabs.fpslibrary.TinyDancer;
 import com.codemonkeylabs.fpslibrary.sample.AppComponent;
@@ -24,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     @Bind(R.id.recyclerView)
     FPSRecyclerView recyclerView;
+    @Bind(R.id.fps_values_tv)
+    TextView fpsTextView;
+
+    TinyDancer mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setupRadioGroup();
-        TinyDancer.create().show(getApplicationContext());
+        mBuilder = TinyDancer.create();
+        mBuilder.show(getApplicationContext());
     }
 
     private void setupRadioGroup() {
@@ -46,26 +53,37 @@ public class MainActivity extends AppCompatActivity {
         RadioButton button = ButterKnife.findById(radioGroup, R.id.defaultValue);
         recyclerView.setMegaBytes(Float.valueOf(button.getText().toString()));
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i)
-            {
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton button = ButterKnife.findById(radioGroup, i);
                 recyclerView.setMegaBytes(Float.valueOf(button.getText().toString()));
                 recyclerView.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.show_fps_values).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBuilder.stop();
+                StringBuilder sb = new StringBuilder();
+                for (Long value : mBuilder.getFpsValues().getDataSet()) {
+                    sb.append("").append(value).append(",");
+                }
+                Toast.makeText(MainActivity.this, "fps : " + sb.toString(), Toast.LENGTH_SHORT).show();
+                fpsTextView.setText(sb);
             }
         });
     }
 
     @OnClick(R.id.start)
     public void start() {
-        TinyDancer.create().show(getApplicationContext());
+        mBuilder.show(getApplicationContext());
     }
 
     @OnClick(R.id.stop)
     public void stop() {
-        TinyDancer.hide((Application) getApplicationContext());
+        mBuilder.hide(getApplicationContext());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        component=null;
+        component = null;
         ButterKnife.unbind(this);
     }
 }

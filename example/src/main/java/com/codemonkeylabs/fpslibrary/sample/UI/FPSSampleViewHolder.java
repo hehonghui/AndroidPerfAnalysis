@@ -24,7 +24,7 @@ public class FPSSampleViewHolder extends RecyclerView.ViewHolder
         super(itemView);
         colorImg = (ImageView) itemView.findViewById(R.id.colorImg);
         bindTime = (TextView) itemView.findViewById(R.id.bindTime);
-        data = new int[1024*10];
+        data = new int[256];
     }
 
     public void onBind(int value, float megaBytes) {
@@ -40,7 +40,7 @@ public class FPSSampleViewHolder extends RecyclerView.ViewHolder
         colorImg.setImageDrawable(new ColorDrawable(colorVal));
 
 
-        int total = (int)(megaBytes*100f);
+        int total = (int)(megaBytes*50f);
         long start = System.currentTimeMillis();
         int startInt = (int) start;
         for (int i = 0; i < total; i++)
