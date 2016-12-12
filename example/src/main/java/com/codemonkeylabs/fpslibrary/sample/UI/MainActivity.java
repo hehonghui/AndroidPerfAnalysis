@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Long value : mBuilder.getFpsValues().getDataSet()) {
                     sb.append("").append(value).append(",");
                 }
-                Toast.makeText(MainActivity.this, "fps : " + sb.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "fps : " + sb.toString() + ", agv : " + mBuilder.getFpsValues().getAverage(), Toast.LENGTH_SHORT).show();
                 fpsTextView.setText(sb);
             }
         });

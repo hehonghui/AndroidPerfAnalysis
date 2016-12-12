@@ -1,5 +1,7 @@
 package com.codemonkeylabs.fpslibrary;
 
+import android.util.Log;
+
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,10 @@ public class FpsCalculator {
     public static AbstractMap.SimpleEntry<Metric, Long> calculateMetric(FPSConfig fpsConfig, List<Long> dataSet,
                                                                         List<Integer> droppedSet) {
         long timeInNS = dataSet.get(dataSet.size() - 1) - dataSet.get(0);
+
         long size = getNumberOfFramesInSet(timeInNS, fpsConfig);
+
+        Log.e("", "### fps timeInNS : " + timeInNS + ", size : " + size) ;
 
         //metric
         int runningOver = 0;

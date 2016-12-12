@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".MainActivity">
+>
 
     <LinearLayout
         android:id="@+id/buttonContainer"
@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/activity_horizontal_margin_half"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin_half">
 
         <Button
             android:id="@+id/start"
@@ -44,7 +44,9 @@
 
     </LinearLayout>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/fps_values_tv" android:layout_below="@id/buttonContainer" android:text="fps values"/>
+    <TextView android:id="@+id/fps_values_tv" android:layout_width="match_parent"
+              android:layout_height="wrap_content" android:layout_below="@id/buttonContainer"
+              android:text="fps values"/>
 
     <LinearLayout
         android:id="@+id/radioContainer"
@@ -52,9 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/fps_values_tv"
         android:orientation="horizontal"
+        android:paddingBottom="@dimen/activity_horizontal_margin_half"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_horizontal_margin_half">
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -63,35 +65,35 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="0.2"/>
 
             <RadioButton
-                android:layout_weight="1"
+                android:id="@+id/defaultValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/defaultValue"
+                android:layout_weight="1"
                 android:text="1"/>
 
             <RadioButton
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3"/>
-
-            <RadioButton
                 android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="7"/>
 
             <RadioButton
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12"/>
+                android:layout_weight="1"
+                android:text="70"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="100"/>
 
         </RadioGroup>
 
