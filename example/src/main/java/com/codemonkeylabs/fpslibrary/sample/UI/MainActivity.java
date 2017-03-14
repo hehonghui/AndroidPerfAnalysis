@@ -1,4 +1,4 @@
-package com.codemonkeylabs.fpslibrary.sample.UI;
+package com.codemonkeylabs.fpslibrary.sample.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private void startMonitor() {
         mTinyDancer = TinyDancer.create(getApplicationContext());
 //        mTinyDancer.show();
-        mTinyDancer.start();
+//        mTinyDancer.start();
+        mTinyDancer.dumpFps(true) ;
+        // todo: 需要在 Activity的onStart 函数之前调用
+        mTinyDancer.install();
     }
 
     private void setupRadioGroup() {

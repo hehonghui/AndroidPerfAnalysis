@@ -1,4 +1,4 @@
-package com.codemonkeylabs.fpslibrary.sample.UI;
+package com.codemonkeylabs.fpslibrary.sample.ui;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

@@ -31,8 +31,11 @@ public class FPSFrameCallback implements Choreographer.FrameCallback {
     public final void doFrame(long frameTimeNanos) {
         if (isStop) {
             Log.e("", "### stop detect fps. ");
-            //we need to register for the next frame callback
+            //we need to register for the next frame callback.   from API 16.
             Choreographer.getInstance().postFrameCallback(this);
+            return;
+        }
+        if ( fpsConfig == null ) {
             return;
         }
         //initial case
@@ -52,7 +55,7 @@ public class FPSFrameCallback implements Choreographer.FrameCallback {
             collectSampleAndSend(frameTimeNanos);
         }
 
-        Log.e("", "### do frame : ");
+//        Log.e("", "### do frame : frameTimeNanos = " + frameTimeNanos);
         // add current frame time to our list
         frameTimeDataSet.add(frameTimeNanos);
 

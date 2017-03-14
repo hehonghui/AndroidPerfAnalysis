@@ -1,11 +1,9 @@
-package com.codemonkeylabs.fpslibrary.sample.UI;
+package com.codemonkeylabs.fpslibrary.sample.ui;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
@@ -13,8 +11,7 @@ import butterknife.ButterKnife;
  * Created by 206847 on 9/12/15.
  */
 public class FPSRecyclerView extends RecyclerView {
-    @Inject
-    FPSSampleAdpater adapter;
+    FPSSampleAdapter adapter;
 
     public FPSRecyclerView(Context context) {
         this(context, null);
@@ -45,7 +42,7 @@ public class FPSRecyclerView extends RecyclerView {
 
     public FPSRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        adapter = new FPSSampleAdpater();
+        adapter = new FPSSampleAdapter();
     }
 
 

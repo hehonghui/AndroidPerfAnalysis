@@ -1,4 +1,4 @@
-package com.codemonkeylabs.fpslibrary.sample.UI;
+package com.codemonkeylabs.fpslibrary.sample.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,25 +12,25 @@ import javax.inject.Inject;
 /**
  * Created by brianplummer on 8/30/15.
  */
-public class FPSSampleAdpater extends RecyclerView.Adapter<FPSSampleViewHolder>
+public class FPSSampleAdapter extends RecyclerView.Adapter<com.codemonkeylabs.fpslibrary.sample.ui.FPSSampleViewHolder>
 {
 
     private float megaBytes = 1;
 
     @Inject
-    public FPSSampleAdpater() {
+    public FPSSampleAdapter() {
     }
 
     @Override
-    public FPSSampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public com.codemonkeylabs.fpslibrary.sample.ui.FPSSampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View itemView = LayoutInflater.from(
                 parent.getContext()).inflate(R.layout.sample_item, parent, false);
-        return new FPSSampleViewHolder(itemView);
+        return new com.codemonkeylabs.fpslibrary.sample.ui.FPSSampleViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(FPSSampleViewHolder holder, int position)
+    public void onBindViewHolder(com.codemonkeylabs.fpslibrary.sample.ui.FPSSampleViewHolder holder, int position)
     {
         holder.onBind(position, megaBytes);
     }

@@ -108,7 +108,7 @@
 
     </LinearLayout>
 
-    <com.codemonkeylabs.fpslibrary.sample.UI.FPSRecyclerView
+    <com.codemonkeylabs.fpslibrary.sample.ui.FPSRecyclerView
         android:id="@+id/recyclerView"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

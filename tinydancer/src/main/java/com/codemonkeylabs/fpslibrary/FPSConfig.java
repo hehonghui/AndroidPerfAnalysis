@@ -26,6 +26,7 @@ public class FPSConfig implements Serializable {
 
     // client facing callback that provides frame info
     public DoFrameCallback frameDataCallback = null;
+    public boolean dumpFps = false ;
 
 
     protected FPSConfig() {

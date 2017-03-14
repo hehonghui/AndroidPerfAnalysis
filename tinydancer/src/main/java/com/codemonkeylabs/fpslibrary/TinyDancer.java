@@ -1,11 +1,14 @@
 package com.codemonkeylabs.fpslibrary;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Choreographer;
 import android.view.Display;
 import android.view.WindowManager;
@@ -14,6 +17,7 @@ import com.codemonkeylabs.fpslibrary.bg.Foreground;
 import com.codemonkeylabs.fpslibrary.callback.DoFrameCallback;
 import com.codemonkeylabs.fpslibrary.callback.FPSFrameCallback;
 import com.codemonkeylabs.fpslibrary.callback.FPSFrameCoachCallback;
+import com.codemonkeylabs.fpslibrary.dump.FpsDump;
 import com.codemonkeylabs.fpslibrary.ui.TinyCoach;
 
 /**
@@ -151,6 +155,57 @@ public class TinyDancer {
 
 
     /**
+     * auto start fps monitor
+     */
+    public void install() {
+        Application application = (Application) context.getApplicationContext() ;
+        application.registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
+    }
+
+
+    Application.ActivityLifecycleCallbacks activityLifecycleCallbacks = new Application.ActivityLifecycleCallbacks() {
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            Log.e("", "### onActivityStarted start Tinydancer") ;
+            activityName = activity.getClass().getName();
+            start();
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            Log.e("", "### onActivityDestroyed destroy Tinydancer") ;
+            destroy();
+        }
+    };
+
+
+    /**
      * this adds a frame callback that the library will invoke on the
      * each time the choreographer calls us, we will send you the frame times
      * and number of dropped frames.
@@ -218,6 +273,17 @@ public class TinyDancer {
         return this;
     }
 
+
+    /**
+     * should dump fps data to local file. The default value is false.
+     * @param isDump
+     * @return
+     */
+    public TinyDancer dumpFps(boolean isDump) {
+        fpsConfig.dumpFps = isDump;
+        return this;
+    }
+
     /**
      * request overlay permission when api >= 23
      *
@@ -253,6 +319,9 @@ public class TinyDancer {
 
     public void destroy() {
         if ( frameCallback != null ) {
+            if ( fpsConfig != null && fpsConfig.dumpFps ) {
+                FpsDump.dump(context.getApplicationContext(), getFpsData());
+            }
             // tell callback to stop registering itself
             frameCallback.destroy();
         }

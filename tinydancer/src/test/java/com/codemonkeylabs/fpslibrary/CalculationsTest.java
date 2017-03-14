@@ -1,5 +1,7 @@
 package com.codemonkeylabs.fpslibrary;
 
+import junit.framework.TestCase;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -11,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnit4.class)
-public class CalculationsTest {
+public class CalculationsTest extends TestCase {
 
     // 16.6ms
     private long oneFrameNS = TimeUnit.NANOSECONDS.convert(16600, TimeUnit.MICROSECONDS);
@@ -61,4 +63,11 @@ public class CalculationsTest {
                 .isEqualTo(FpsCalculator.Metric.BAD);
     }
 
+    @Test
+    public void testSb() throws Exception {
+        StringBuilder stringBuilder = new StringBuilder("12,45,") ;
+        int index = stringBuilder.lastIndexOf(",");
+        assertEquals("12,45", stringBuilder.delete(index, stringBuilder.length()).toString()) ;
+
+    }
 }

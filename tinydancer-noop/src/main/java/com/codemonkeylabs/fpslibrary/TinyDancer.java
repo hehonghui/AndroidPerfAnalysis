@@ -64,6 +64,10 @@ public class TinyDancer {
     }
 
 
+    public void install() {
+
+    }
+
     /**
      * this adds a frame callback that the library will invoke on the
      * each time the choreographer calls us, we will send you the frame times

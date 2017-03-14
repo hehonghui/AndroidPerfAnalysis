@@ -1,7 +1,5 @@
 package com.codemonkeylabs.fpslibrary;
 
-import android.util.Log;
-
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +46,7 @@ public class FpsCalculator {
 
         long size = getNumberOfFramesInSet(timeInNS, fpsConfig);
 
-        Log.e("", "### fps timeInNS : " + timeInNS + ", size : " + size) ;
+//        Log.e("", "### fps timeInNS : " + timeInNS + ", size : " + size) ;
 
         //metric
         int runningOver = 0;
