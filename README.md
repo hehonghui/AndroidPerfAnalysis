@@ -15,7 +15,7 @@ In your `DebugApplication` class:
 public class DebugApplication extends Application {
 
   @Override public void onCreate() {
-  
+
    // 自动收集每个 Activity的 fps 数据, 并且dump到本地文件中
    TinyDancer.install(this);
 
@@ -51,6 +51,6 @@ public class DebugApplication extends Application {
 
 See sample application that simulates excessive bind time:
 
-![Tiny Dancer Sample](https://raw.githubusercontent.com/brianPlummer/TinyDancer/master/assets/tinydancer1.gif "Tiny Dancer Sample")
+![Tiny Dancer Sample](assets/tinydancer1.gif "Tiny Dancer Sample")
 
 Have an project with performance issues? We'd be happy to help tune it.  
