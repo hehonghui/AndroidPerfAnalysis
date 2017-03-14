@@ -43,10 +43,6 @@ dependencies {
     compile deps.butterknife
     compile deps.dagger
 
-    annotationProcessor deps.daggerCompiler
-
-    provided deps.javaxAnnotation
-
     testCompile project(":tinydancer-noop")
 }
 

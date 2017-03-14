@@ -16,10 +16,9 @@ public class FpsData {
     /**
      * Activity name
      */
-    private String mActivityName ;
+    private String mActivityName = "";
 
     public FpsData() {
-        this(Collections.EMPTY_LIST);
     }
 
     public FpsData(List<Long> dataSet) {

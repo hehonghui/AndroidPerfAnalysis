@@ -10,39 +10,69 @@ import android.view.Choreographer;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.codemonkeylabs.fpslibrary.bg.Foreground;
+import com.codemonkeylabs.fpslibrary.callback.DoFrameCallback;
+import com.codemonkeylabs.fpslibrary.callback.FPSFrameCallback;
+import com.codemonkeylabs.fpslibrary.callback.FPSFrameCoachCallback;
 import com.codemonkeylabs.fpslibrary.ui.TinyCoach;
 
 /**
  * Created by brianplummer on 8/29/15.
  */
 public class TinyDancer {
-    public static TinyDancer create(){
-        return new TinyDancer();
-    }
-
     private FPSConfig fpsConfig = new FPSConfig();
-    private FPSFrameCallback fpsFrameCallback;
     private TinyCoach tinyCoach;
     private Foreground.Listener foregroundListener = new Foreground.Listener() {
         @Override
         public void onBecameForeground() {
-            tinyCoach.show();
+            if ( tinyCoach != null ) {
+                tinyCoach.show();
+            }
         }
 
         @Override
         public void onBecameBackground() {
-            tinyCoach.hide(false);
+            if ( tinyCoach != null ) {
+                tinyCoach.hide(false);
+            }
         }
     };
+
+    private FPSFrameCallback frameCallback;
+    private String activityName = "";
+    private Context context;
+
+    /**
+     * create a TinyDancer instance
+     * @param context
+     * @return
+     */
+    public static TinyDancer create(Context context){
+        return create(context, "");
+    }
+
+    /**
+     * create a TinyDancer for specified activity
+     * @param context
+     * @param activityName
+     * @return
+     */
+    public static TinyDancer create(Context context, String activityName){
+        TinyDancer instance = new TinyDancer();
+        instance.context = context.getApplicationContext();
+        instance.activityName = activityName ;
+        // set device's frame rate info into the config
+        instance.setFrameRate();
+        return instance;
+    }
 
 
     /**
      * configures the fpsConfig to the device's hardware
      * refreshRate ex. 60fps and deviceRefreshRateInMs ex. 16.6ms
      *
-     * @param context
      */
-    private void setFrameRate(Context context) {
+    private void setFrameRate() {
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         fpsConfig.deviceRefreshRateInMs = 1000f / display.getRefreshRate();
         fpsConfig.refreshRate = display.getRefreshRate();
@@ -53,23 +83,12 @@ public class TinyDancer {
      * nulls out static variables
      * called from FPSLibrary in a static context
      *
-     * @param context
      */
-    public void hide(Context context) {
+    public void hide() {
         if (tinyCoach == null) {
             return;
         }
-        // tell callback to stop registering itself
-        fpsFrameCallback.setEnabled(false);
-
-        Foreground.get(context).removeListener(foregroundListener);
-        // remove the view from the window
-        tinyCoach.destroy();
-
-        // null it all out
-        tinyCoach = null;
-        fpsFrameCallback = null;
-        fpsConfig = null;
+        destroy();
     }
 
     // PUBLIC BUILDER METHODS
@@ -78,9 +97,8 @@ public class TinyDancer {
      * show fps meter, this regisers the frame callback that
      * collects the fps info and pushes it to the ui
      *
-     * @param context
      */
-    public void show(Context context) {
+    public void show() {
         if (overlayPermRequest(context)) {
             //once permission is granted then you must call show() again
             return;
@@ -92,19 +110,45 @@ public class TinyDancer {
             return;
         }
 
-        // set device's frame rate info into the config
-        setFrameRate(context);
-
         // create the presenter that updates the view
-        tinyCoach = new TinyCoach((Application) context.getApplicationContext(), fpsConfig);
-
+        tinyCoach = new TinyCoach(context.getApplicationContext(), fpsConfig);
         // create our choreographer callback and register it
-        fpsFrameCallback = new FPSFrameCallback(fpsConfig, tinyCoach);
-        Choreographer.getInstance().postFrameCallback(fpsFrameCallback);
+        startFpsMonitor(context, new FPSFrameCoachCallback(fpsConfig, tinyCoach));
+    }
 
+
+    /**
+     *  show fps meter, this regisers the frame callback that
+     * collects the fps info only .
+     */
+    public void start() {
+        startFpsMonitor(context, new FPSFrameCallback(fpsConfig));
+    }
+
+
+    private void startFpsMonitor(Context context,  FPSFrameCallback callback) {
+        frameCallback = callback ;
+        // create our choreographer callback and register it
+        Choreographer.getInstance().postFrameCallback(callback);
         //set activity background/foreground listener
         Foreground.init((Application) context.getApplicationContext()).addListener(foregroundListener);
     }
+
+
+    /**
+     * @return
+     */
+    public FpsData getFpsData() {
+        FpsData fpsData;
+        if ( frameCallback == null ) {
+            fpsData = new FpsData() ;
+        } else {
+            fpsData = new FpsData(frameCallback.getFpsDataSet()) ;
+        }
+        fpsData.setActivityName(activityName) ;
+        return fpsData;
+    }
+
 
     /**
      * this adds a frame callback that the library will invoke on the
@@ -195,26 +239,34 @@ public class TinyDancer {
     }
 
 
-    /**
-     * @return
-     */
-    public FpsData getFpsValues() {
-        return tinyCoach == null ? new FpsData() : new FpsData(tinyCoach.getFpsValues());
-    }
-
-    /**
-     *
-     */
     public void stop() {
-        if (fpsFrameCallback != null) {
-            fpsFrameCallback.setStop(true);
+        if (frameCallback != null) {
+            frameCallback.stop();
         }
     }
 
     public void resume() {
-        if (fpsFrameCallback != null) {
-            fpsFrameCallback.setStop(false);
+        if (frameCallback != null) {
+            frameCallback.resume();
         }
+    }
+
+    public void destroy() {
+        if ( frameCallback != null ) {
+            // tell callback to stop registering itself
+            frameCallback.destroy();
+        }
+
+        if ( tinyCoach != null ) {
+            // remove the view from the window
+            tinyCoach.destroy();
+        }
+
+        Foreground.get(context).removeListener(foregroundListener);
+        // null it all out
+        tinyCoach = null;
+        frameCallback = null;
+        fpsConfig = null;
     }
 
 }

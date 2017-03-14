@@ -1,4 +1,4 @@
-package com.codemonkeylabs.fpslibrary;
+package com.codemonkeylabs.fpslibrary.callback;
 
 /**
  * Created by brianplummer on 11/12/15.

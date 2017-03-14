@@ -18,34 +18,43 @@
             android:id="@+id/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="2dp"
             android:text="Show"
             android:textColor="@android:color/black"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
 
         <Button
             android:id="@+id/stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="2dp"
             android:text="Hide"
             android:textColor="@android:color/black"
-            android:textSize="14sp"/>
-
+            android:textSize="12sp"/>
 
         <Button
             android:id="@+id/show_fps_values"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="2dp"
             android:text="fps values"
             android:textColor="@android:color/black"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/restart_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:text="Resume"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"/>
 
     </LinearLayout>
 
     <TextView android:id="@+id/fps_values_tv" android:layout_width="match_parent"
               android:layout_height="wrap_content" android:layout_below="@id/buttonContainer"
+              android:textColor="@android:color/holo_orange_dark"
               android:text="fps values"/>
 
     <LinearLayout

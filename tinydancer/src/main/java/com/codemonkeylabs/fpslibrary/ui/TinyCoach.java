@@ -1,8 +1,8 @@
 package com.codemonkeylabs.fpslibrary.ui;
 
 import android.animation.Animator;
-import android.app.Application;
 import android.app.Service;
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.codemonkeylabs.fpslibrary.FpsCalculator;
 import com.codemonkeylabs.fpslibrary.FPSConfig;
+import com.codemonkeylabs.fpslibrary.FpsCalculator;
 import com.codemonkeylabs.fpslibrary.R;
 
 import java.util.AbstractMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class TinyCoach {
@@ -26,7 +25,6 @@ public class TinyCoach {
     private View meterView;
     private final WindowManager windowManager;
     private int shortAnimationDuration = 200, longAnimationDuration = 700;
-    private final List<Long> mFpsValues = new LinkedList<>() ;
 
     // detect double tap so we can hide tinyDancer
     private GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector
@@ -39,23 +37,19 @@ public class TinyCoach {
         }
     };
 
-    public TinyCoach(Application context, FPSConfig config) {
-
+    public TinyCoach(Context context, FPSConfig config) {
         fpsConfig = config;
-
         //create meter view
         meterView = LayoutInflater.from(context).inflate(R.layout.meter_view, null);
 
         //set initial fps value....might change...
         ((TextView) meterView).setText((int) fpsConfig.refreshRate + "");
-
         // grab window manager and add view to the window
         windowManager = (WindowManager) meterView.getContext().getSystemService(Service.WINDOW_SERVICE);
         addViewToWindow(meterView);
     }
 
     private void addViewToWindow(View view) {
-
         WindowManager.LayoutParams paramsF = new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_PHONE, WindowManager
                 .LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
@@ -67,22 +61,18 @@ public class TinyCoach {
 
         // add view to the window
         windowManager.addView(view, paramsF);
-
         // create gesture detector to listen for double taps
         GestureDetector gestureDetector = new GestureDetector(view.getContext(), simpleOnGestureListener);
-
         // attach touch listener
         view.setOnTouchListener(new DancerTouchListener(paramsF, windowManager, gestureDetector));
-
         // disable haptic feedback
         view.setHapticFeedbackEnabled(false);
-
         // show the meter
         show();
     }
 
-    public void showData(FPSConfig fpsConfig, List<Long> dataSet) {
 
+    public long showFps(FPSConfig fpsConfig, List<Long> dataSet) {
         List<Integer> droppedSet = FpsCalculator.getDroppedSet(fpsConfig, dataSet);
         AbstractMap.SimpleEntry<FpsCalculator.Metric, Long> answer = FpsCalculator.calculateMetric(fpsConfig, dataSet,
                 droppedSet);
@@ -97,15 +87,11 @@ public class TinyCoach {
 
         ((TextView) meterView).setText(answer.getValue() + "");
 
-        // cache fps values
-        mFpsValues.add(answer.getValue()) ;
-
         Log.e("", "####  tiny dancer fps : " + answer.getValue());
+        // cache fps values
+        return answer.getValue();
     }
 
-    public List<Long> getFpsValues() {
-        return mFpsValues;
-    }
 
     public void destroy() {
         meterView.setOnTouchListener(null);

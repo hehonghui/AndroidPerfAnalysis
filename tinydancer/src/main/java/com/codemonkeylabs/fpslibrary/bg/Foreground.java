@@ -1,4 +1,4 @@
-package com.codemonkeylabs.fpslibrary;
+package com.codemonkeylabs.fpslibrary.bg;
 
 import android.app.Activity;
 import android.app.Application;

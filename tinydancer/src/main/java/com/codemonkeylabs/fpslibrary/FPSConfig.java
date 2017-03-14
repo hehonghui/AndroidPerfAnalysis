@@ -2,6 +2,8 @@ package com.codemonkeylabs.fpslibrary;
 
 import android.view.Gravity;
 
+import com.codemonkeylabs.fpslibrary.callback.DoFrameCallback;
+
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
