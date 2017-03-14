@@ -2,6 +2,13 @@
 
 A real time frames per second measuring library for Android that also shows a color coded metric.  This metric is based on percentage of time spent when you have dropped 2 or more frames.  If the application spends more than 5% in this state then the color turns yellow, when you have reached the 20% threshold the indicator turns red.  
 
+## 相关修改
+
+* 在原版TinyDancer的基础上修复一些crash bug
+* 重构代码, 使逻辑更清晰
+* 收集最原始的FPS数据，以及去除对ui展示的依赖
+* 支持将fps数据dump到本地文件中，使之能够跟跟自动化测试对接上
+* 支持 Activity页面的自动检测 (在Application中调用 TinyDancer.install(this) ) 即可
 
 ## Min SDK
 Tiny Dancer min sdk is API 16
