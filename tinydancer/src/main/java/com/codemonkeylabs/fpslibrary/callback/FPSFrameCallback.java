@@ -79,7 +79,7 @@ public class FPSFrameCallback implements Choreographer.FrameCallback {
                 dataSet, droppedSet);
         // cache fps values
         mFpsDataSet.add(answer.getValue());
-        Log.e("", "####  tiny dancer fps : " + answer.getValue());
+//        Log.e("", "####  tiny dancer fps : " + answer.getValue());
     }
 
 

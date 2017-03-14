@@ -1,19 +1,17 @@
 package com.codemonkeylabs.fpslibrary;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Choreographer;
 import android.view.Display;
 import android.view.WindowManager;
 
 import com.codemonkeylabs.fpslibrary.bg.Foreground;
+import com.codemonkeylabs.fpslibrary.callback.ActivityCallback;
 import com.codemonkeylabs.fpslibrary.callback.DoFrameCallback;
 import com.codemonkeylabs.fpslibrary.callback.FPSFrameCallback;
 import com.codemonkeylabs.fpslibrary.callback.FPSFrameCoachCallback;
@@ -29,14 +27,14 @@ public class TinyDancer {
     private Foreground.Listener foregroundListener = new Foreground.Listener() {
         @Override
         public void onBecameForeground() {
-            if ( tinyCoach != null ) {
+            if (tinyCoach != null) {
                 tinyCoach.show();
             }
         }
 
         @Override
         public void onBecameBackground() {
-            if ( tinyCoach != null ) {
+            if (tinyCoach != null) {
                 tinyCoach.hide(false);
             }
         }
@@ -48,23 +46,25 @@ public class TinyDancer {
 
     /**
      * create a TinyDancer instance
+     *
      * @param context
      * @return
      */
-    public static TinyDancer create(Context context){
+    public static TinyDancer create(Context context) {
         return create(context, "");
     }
 
     /**
      * create a TinyDancer for specified activity
+     *
      * @param context
      * @param activityName
      * @return
      */
-    public static TinyDancer create(Context context, String activityName){
+    public static TinyDancer create(Context context, String activityName) {
         TinyDancer instance = new TinyDancer();
         instance.context = context.getApplicationContext();
-        instance.activityName = activityName ;
+        instance.activityName = activityName;
         // set device's frame rate info into the config
         instance.setFrameRate();
         return instance;
@@ -74,7 +74,6 @@ public class TinyDancer {
     /**
      * configures the fpsConfig to the device's hardware
      * refreshRate ex. 60fps and deviceRefreshRateInMs ex. 16.6ms
-     *
      */
     private void setFrameRate() {
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -82,11 +81,16 @@ public class TinyDancer {
         fpsConfig.refreshRate = display.getRefreshRate();
     }
 
+    public TinyDancer setFpsConfig(FPSConfig fpsConfig) {
+        this.fpsConfig = fpsConfig ;
+        setFrameRate();
+        return this;
+    }
+
     /**
      * stops the frame callback and foreground listener
      * nulls out static variables
      * called from FPSLibrary in a static context
-     *
      */
     public void hide() {
         if (tinyCoach == null) {
@@ -100,7 +104,6 @@ public class TinyDancer {
     /**
      * show fps meter, this regisers the frame callback that
      * collects the fps info and pushes it to the ui
-     *
      */
     public void show() {
         if (overlayPermRequest(context)) {
@@ -122,7 +125,7 @@ public class TinyDancer {
 
 
     /**
-     *  show fps meter, this regisers the frame callback that
+     * show fps meter, this regisers the frame callback that
      * collects the fps info only .
      */
     public void start() {
@@ -130,8 +133,8 @@ public class TinyDancer {
     }
 
 
-    private void startFpsMonitor(Context context,  FPSFrameCallback callback) {
-        frameCallback = callback ;
+    private void startFpsMonitor(Context context, FPSFrameCallback callback) {
+        frameCallback = callback;
         // create our choreographer callback and register it
         Choreographer.getInstance().postFrameCallback(callback);
         //set activity background/foreground listener
@@ -144,12 +147,12 @@ public class TinyDancer {
      */
     public FpsData getFpsData() {
         FpsData fpsData;
-        if ( frameCallback == null ) {
-            fpsData = new FpsData() ;
+        if (frameCallback == null) {
+            fpsData = new FpsData();
         } else {
-            fpsData = new FpsData(frameCallback.getFpsDataSet()) ;
+            fpsData = new FpsData(frameCallback.getFpsDataSet());
         }
-        fpsData.setActivityName(activityName) ;
+        fpsData.setActivityName(activityName);
         return fpsData;
     }
 
@@ -157,52 +160,66 @@ public class TinyDancer {
     /**
      * auto start fps monitor
      */
-    public void install() {
-        Application application = (Application) context.getApplicationContext() ;
-        application.registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
+    public static void install(Application application) {
+        if ( application != null ) {
+            application.registerActivityLifecycleCallbacks(new ActivityCallback());
+        }
     }
 
 
-    Application.ActivityLifecycleCallbacks activityLifecycleCallbacks = new Application.ActivityLifecycleCallbacks() {
-
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+    /**
+     * auto start fps monitor
+     */
+    public static void install(Application application, FPSConfig config) {
+        if ( application != null ) {
+            application.registerActivityLifecycleCallbacks(new ActivityCallback());
         }
+    }
 
-        @Override
-        public void onActivityStarted(Activity activity) {
-            Log.e("", "### onActivityStarted start Tinydancer") ;
-            activityName = activity.getClass().getName();
-            start();
-        }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
 
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-            Log.e("", "### onActivityDestroyed destroy Tinydancer") ;
-            destroy();
-        }
-    };
+    //
+    //    Application.ActivityLifecycleCallbacks activityLifecycleCallbacks = new Application
+    // .ActivityLifecycleCallbacks() {
+    //
+    //
+    //        @Override
+    //        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+    //        }
+    //
+    //        @Override
+    //        public void onActivityStarted(Activity activity) {
+    //            Log.e("", "### onActivityStarted start Tinydancer") ;
+    //            activityName = activity.getClass().getName();
+    //            start();
+    //        }
+    //
+    //        @Override
+    //        public void onActivityResumed(Activity activity) {
+    //
+    //        }
+    //
+    //        @Override
+    //        public void onActivityPaused(Activity activity) {
+    //
+    //        }
+    //
+    //        @Override
+    //        public void onActivityStopped(Activity activity) {
+    //
+    //        }
+    //
+    //        @Override
+    //        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    //
+    //        }
+    //
+    //        @Override
+    //        public void onActivityDestroyed(Activity activity) {
+    //            Log.e("", "### onActivityDestroyed destroy Tinydancer") ;
+    //            destroy();
+    //        }
+    //    };
 
 
     /**
@@ -276,6 +293,7 @@ public class TinyDancer {
 
     /**
      * should dump fps data to local file. The default value is false.
+     *
      * @param isDump
      * @return
      */
@@ -318,15 +336,15 @@ public class TinyDancer {
     }
 
     public void destroy() {
-        if ( frameCallback != null ) {
-            if ( fpsConfig != null && fpsConfig.dumpFps ) {
+        if (frameCallback != null) {
+            if (fpsConfig != null && fpsConfig.dumpFps) {
                 FpsDump.dump(context.getApplicationContext(), getFpsData());
             }
             // tell callback to stop registering itself
             frameCallback.destroy();
         }
 
-        if ( tinyCoach != null ) {
+        if (tinyCoach != null) {
             // remove the view from the window
             tinyCoach.destroy();
         }

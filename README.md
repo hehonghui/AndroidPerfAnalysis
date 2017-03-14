@@ -2,26 +2,12 @@
 
 A real time frames per second measuring library for Android that also shows a color coded metric.  This metric is based on percentage of time spent when you have dropped 2 or more frames.  If the application spends more than 5% in this state then the color turns yellow, when you have reached the 20% threshold the indicator turns red.  
 
- **New** Double tap overlay to hide!
-
-*“Perf Matters”* - Random Guy at Meetup
-
-![Tiny Dancer](https://raw.githubusercontent.com/brianPlummer/TinyDancer/master/assets/tinydancer2.png "Tiny Dancer")
 
 ## Min SDK
 Tiny Dancer min sdk is API 16
 
 ## Getting started
 
-In your `build.gradle`:
-
-```gradle
- dependencies {
-   debugCompile "com.github.brianPlummer:tinydancer:0.1.0"
-   releaseCompile "com.github.brianPlummer:tinydancer-noop:0.1.0"
-   testCompile "com.github.brianPlummer:tinydancer-noop:0.1.0"
- }
-```
 
 In your `DebugApplication` class:
 
@@ -29,27 +15,33 @@ In your `DebugApplication` class:
 public class DebugApplication extends Application {
 
   @Override public void onCreate() {
-   TinyDancer.create()
-             .show(this);
+  
+   // 自动收集每个 Activity的 fps 数据, 并且dump到本地文件中
+   TinyDancer.install(this);
+
+  // 创建 TinyDancer
+   TinyDancer.create(this)
+             .show();
              
    //alternatively
-   TinyDancer.create()
+   TinyDancer.create(this)
       .redFlagPercentage(.1f) // set red indicator for 10%
       .startingGravity(Gravity.TOP)
       .startingXPosition(200)
       .startingYPosition(600)
       .show(this);
+      
 
    //you can add a callback to get frame times and the calculated
    //number of dropped frames within that window
-   TinyDancer.create()
+   TinyDancer.create(this)
        .addFrameDataCallback(new FrameDataCallback() {
           @Override
           public void doFrame(long previousFrameNS, long currentFrameNS, int droppedFrames) {
              //collect your stats here
           }
         })
-        .show(this);
+        .show();
   }
 }
 ```
@@ -61,4 +53,4 @@ See sample application that simulates excessive bind time:
 
 ![Tiny Dancer Sample](https://raw.githubusercontent.com/brianPlummer/TinyDancer/master/assets/tinydancer1.gif "Tiny Dancer Sample")
 
-Have an project with performance issues? We'd be happy to help tune it.  mike@friendlyrobot.nyc
+Have an project with performance issues? We'd be happy to help tune it.  

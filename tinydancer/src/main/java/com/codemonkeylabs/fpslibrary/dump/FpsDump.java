@@ -92,7 +92,7 @@ public final class FpsDump {
             //获取跟目录
             path = path + File.separator + context.getPackageName() + "/fps/";
             File dir = new File(path);
-            // 清空缓存
+            // 第一次写入时清空缓存, 避免与上次的日志混淆
             if (!isClear) {
                 isClear = true;
                 deleteDirectory(dir);

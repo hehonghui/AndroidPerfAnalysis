@@ -35,13 +35,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 手动创建 TinyDancer
+     */
     private void startMonitor() {
-        mTinyDancer = TinyDancer.create(getApplicationContext());
+//        mTinyDancer = TinyDancer.create(getApplicationContext());
+        // 启动检测fps, 有ui展示
 //        mTinyDancer.show();
+        // 启动检测fps, 但是没有ui展示, 只收集数据
 //        mTinyDancer.start();
-        mTinyDancer.dumpFps(true) ;
-        // todo: 需要在 Activity的onStart 函数之前调用
-        mTinyDancer.install();
     }
 
     private void setupRadioGroup() {
@@ -63,15 +65,19 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.show_fps_values).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTinyDancer.stop();
-                showFpsData();
+                if ( mTinyDancer != null ) {
+                    mTinyDancer.stop();
+                    showFpsData();
+                }
             }
         });
 
         findViewById(R.id.restart_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTinyDancer.resume();
+                if ( mTinyDancer != null ) {
+                    mTinyDancer.resume();
+                }
             }
         });
     }
@@ -87,12 +93,16 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.start)
     public void start() {
-        mTinyDancer.show();
+        if ( mTinyDancer != null ) {
+            mTinyDancer.show();
+        }
     }
 
     @OnClick(R.id.stop)
     public void stop() {
-        mTinyDancer.hide();
+        if ( mTinyDancer != null ) {
+            mTinyDancer.hide();
+        }
     }
 
     @Override
