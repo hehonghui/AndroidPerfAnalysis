@@ -42,6 +42,7 @@ dependencies {
     compile deps.recyclerviewv7
     compile deps.butterknife
     compile deps.dagger
+    compile 'com.facebook.android:audience-network-sdk:4.+'
 
     testCompile project(":tinydancer-noop")
 }

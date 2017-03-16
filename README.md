@@ -53,6 +53,21 @@ public class DebugApplication extends Application {
 }
 ```
 
+## dump 的数据格式
+
+当调用 `TinyDancer.install(this);` 或者 TinyDancer对象的`destroy()`函数时 时 会为每个 Activity 产生一份FPS数据,
+目录为 `Environment.getExternalStorageDirectory().getPath()/应用包名/fps/`. 数据格式为
+
+```
+activity : Activity的完整名字
+58,55,57,59,60,60
+Max: 60
+Min: 55
+Avg: 58
+```
+
+代表某个Activity在各个时间段内的FPS值,最高为60（最流畅）, 最低为0, 以及最大、最小、平均的FPS值。
+
 **You're good to go!** Tiny Dancer will show a small draggable view overlay with FPS as well as a color indicator of when FPS drop.  You can double tap the overlay to explicitly hide it.
 
 
